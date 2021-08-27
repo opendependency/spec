@@ -1,0 +1,76 @@
+/*
+Copyright The OpenDependency Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package opendependency.org.spec.v1;
+
+option go_package = "pkg/spec/v1";
+
+// ModuleVersion represents the module version details.
+message ModuleVersion {
+    // Name specifies the actual module version.
+    string name = 1;
+    // Schema describes the used version schema.
+    optional string schema = 2;
+    // Replaces specifies an array of module versions replaced by this module version.
+    repeated string replaces = 3;
+}
+
+// DependencyDirection describes a dependency direction.
+enum DependencyDirection {
+    // UPSTREAM describes a dependency to another module this module depends on.
+    UPSTREAM = 0;
+    // DOWNSTREAM describes a dependency to another module which depends on this module.
+    DOWNSTREAM = 1;
+}
+
+// ModuleDependency represents a dependency to another module.
+message ModuleDependency {
+    // Namespace specifies the dependent module namespace.
+    // The namespace groups one or more modules with each other.
+    string namespace = 1;
+    // Name specifies the dependent module name.
+    // The module name represents this module in a namespace.
+    string name = 2;
+    // Type specifies the dependent module type.
+    // The module type represents in th emost cases the underlying technology.
+    string type = 3;
+    // Version specifies the dependent module version.
+    string version = 4;
+    // Direction specifies the dependency direction.
+    // If omitted, the default is UPSTREAM.
+    optional DependencyDirection direction = 5;
+}
+
+// Module represents an arbitrary artefact.
+message Module {
+    // Namespace specifies the module namespace.
+    // The namespace groups one or more modules with each other.
+    string namespace = 1;
+    // Name specifies the module name.
+    // The module name represents this module in a namespace.
+    string name = 2;
+    // Type specifies the module type.
+    // The module type represents in th emost cases the underlying technology.
+    string type = 3;
+    // ModuleVersion specifies the module version details.
+    ModuleVersion version = 4;
+    // Annotations contains arbitrary metadata.
+    map<string,string> annotations = 5;
+    // Dependencies specifies zero, one or more dependencies to other modules.
+    repeated ModuleDependency dependencies = 6;
+}
